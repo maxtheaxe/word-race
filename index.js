@@ -5,7 +5,6 @@ var path = require('path');
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
-var wordList = []; // list of finished words
 var word = []; // list of letters in current word
 
 server.listen(port, () => {
@@ -46,13 +45,22 @@ io.on('connection', (socket) => {
     socket.username = username;
     ++numUsers;
     addedUser = true;
+    if( numUsers % 2 === 0 ){
+      team = 1
+    } else{
+      team = 2
+    }
+
     socket.emit('login', {
-      numUsers: numUsers
+      numUsers: numUsers,
+      teamMembership: team
     });
+
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username,
-      numUsers: numUsers
+      numUsers: numUsers,
+      teamMembership: team
     });
   });
 
@@ -71,6 +79,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('new message', {
       username: socket.username,
       message: data
+      // teamMembership: team
     });
   });
 
