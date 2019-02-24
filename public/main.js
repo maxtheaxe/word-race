@@ -59,7 +59,8 @@ $(function() {
       $inputMessage.val('');
       addChatMessage({
         username: username,
-        message: message
+        message: message,
+        teamMembership: team
       });
       // tell server to execute 'new message' and send along one parameter
       socket.emit('new message', message);
