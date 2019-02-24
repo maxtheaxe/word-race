@@ -17,6 +17,7 @@ $(function() {
 
   // Prompt for setting a username
   var username;
+  var team;
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -92,9 +93,15 @@ $(function() {
       $typingMessages.remove();
     }
 
-    var $usernameDiv = $('<span class="username"/>')
-      .text(data.username)
-      .css('color', getUsernameColor(data.username));
+    if( team === 1 ){
+      var $usernameDiv = $('<span class=".curWordOne"/>')
+        .text(data.username)
+        .css('color', getUsernameColor(data.username));
+    } else{
+      var $usernameDiv = $('<span class=".curWordTwo"/>')
+        .text(data.username)
+        .css('color', getUsernameColor(data.username));
+    }
     var $messageBodyDiv = $('<span class="messageBody">')
       .text(data.message);
 
@@ -254,6 +261,7 @@ $(function() {
     // Display the welcome message
     var message = "Welcome to Socket.IO Chat – ";
     var team = "You are on team " + data.teamMembership;
+    team = data.teamMembership;
     log(message, {
       prepend: true
     });
