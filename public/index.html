@@ -2,16 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Socket.IO Chat Example</title>
+  <title>Word Race</title>
   <link rel="stylesheet" href="main.css">
 </head>
 <body>
   <ul class="pages">
     <li class="chat page">
       <div class="chatArea">
-        <ul class="messages"></ul>
+        <!-- <ul class="messages"></ul> -->
+        <div class="messages" id="colOne">
+          <ul class="wordList" id="wordListOne"></ul>
+          <hr />
+          <ul class="curWord" id="curWordOne"></ul>
+          <hr />
+          <p class="final" id="finalOne">13</p>
+        </div>
+        <div class="messages" id="colTwo">
+          <ul class="wordList" id="wordListTwo"></ul>
+          <hr />
+          <ul class="curWord" id="curWordTwo"></ul>
+          <hr />
+          <p class="final" id="finalTwo">21</p>
+        </div>
       </div>
-      <input class="inputMessage" placeholder="Type here..."/>
+      <input class="inputMessage" placeholder="Type here..." maxlength="1"/>
     </li>
     <li class="login page">
       <div class="form">
