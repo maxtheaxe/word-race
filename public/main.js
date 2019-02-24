@@ -51,7 +51,7 @@ $(function() {
     }
   }
 
-  // Sends a chat message
+  // Sends a chat message (bound to enter key)
   const sendMessage = () => {
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
@@ -65,6 +65,16 @@ $(function() {
       });
       // tell server to execute 'new message' and send along one parameter
       socket.emit('new message', message);
+    }
+  }
+
+  // Sends an indicator that the word is done (bound to shift key)
+  const wordDone = () => {
+    console.log("wordDone has executed"); // check if func is execing
+    // if there is a non-empty message and a socket connection
+    if (connected) {
+      $inputMessage.val('');
+      socket.emit('word finished');
     }
   }
 
@@ -99,6 +109,8 @@ $(function() {
     addMessageElement($messageDiv, options);
   }
 
+  // Typing status unnecessary
+
   // Adds the visual chat typing message
   const addChatTyping = (data) => {
     data.typing = true;
@@ -112,6 +124,8 @@ $(function() {
       $(this).remove();
     });
   }
+
+  // End typing status
 
   // Adds a message element to the messages and scrolls to the bottom
   // el - The element to add as a message
@@ -205,6 +219,18 @@ $(function() {
         setUsername();
       }
     }
+    if (event.which === 16) { // Shift key - finish word
+      if (username) {
+        wordDone();
+
+        console.log("shift key pressed"); // verify that input is being received
+
+        socket.emit('stop typing');
+        typing = false;
+      } else {
+        setUsername();
+      }
+    }
   });
 
   $inputMessage.on('input', () => {
@@ -238,6 +264,11 @@ $(function() {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', (data) => {
+    addChatMessage(data);
+  });
+
+  // Whenever the server emits 'new word', update the completed word list
+  socket.on('new word', (data) => {
     addChatMessage(data);
   });
 
