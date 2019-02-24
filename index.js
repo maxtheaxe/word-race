@@ -5,6 +5,7 @@ var path = require('path');
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
+var word = []; // list of letters in current word
 
 server.listen(port, () => {
   console.log('Server listening at port %d', port);
@@ -22,6 +23,13 @@ io.on('connection', (socket) => {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', (data) => {
+
+    console.log('submitted new msg: ', data); // submitted data
+
+    word.push(data); // push submitted letter to current word list
+
+    console.log('word in progress: ', word); // current word
+
     // we tell the client to execute 'new message'
     socket.broadcast.emit('new message', {
       username: socket.username,
@@ -56,6 +64,26 @@ io.on('connection', (socket) => {
     });
   });
 
+  // when the client emits 'word finished', this listens and executes
+  socket.on('word finished', () => {
+
+    data = word.join(''); // join all the letters in the list to one word
+
+    console.log(data); // joined letters
+
+    wordList.push(data); // pushes the finished word to the list of finished words
+
+    word = []; // clear the list that was holding the letters
+
+    // we tell the client to execute 'new message'
+    socket.broadcast.emit('new message', {
+      username: socket.username,
+      message: data
+    });
+  });
+
+  // Typing status is unnecessary
+
   // when the client emits 'typing', we broadcast it to others
   socket.on('typing', () => {
     socket.broadcast.emit('typing', {
@@ -69,6 +97,8 @@ io.on('connection', (socket) => {
       username: socket.username
     });
   });
+
+  // End typing status
 
   // when the user disconnects.. perform this
   socket.on('disconnect', () => {
