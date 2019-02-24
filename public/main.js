@@ -32,7 +32,7 @@ $(function() {
     } else {
       message += "there are " + data.numUsers + " participants";
     }
-    log(message);
+    //log(message);
   }
 
   // Sets the client's username
@@ -94,15 +94,15 @@ $(function() {
     }
 
     if( team === 1 ){
-      var $usernameDiv = $('<span class=".curWordOne"/>')
+      var $usernameDiv = $('<span class=".messages"/>')
         .text(data.username)
         .css('color', getUsernameColor(data.username));
     } else{
-      var $usernameDiv = $('<span class=".curWordTwo"/>')
+      var $usernameDiv = $('<span class=".messages"/>')
         .text(data.username)
         .css('color', getUsernameColor(data.username));
     }
-    var $messageBodyDiv = $('<span class="messageBody">')
+    var $messageBodyDiv = $('<span class=".messageBody">')
       .text(data.message);
 
     var typingClass = data.typing ? 'typing' : '';
@@ -259,13 +259,8 @@ $(function() {
   socket.on('login', (data) => {
     connected = true;
     // Display the welcome message
-    var message = "Welcome to Socket.IO Chat – ";
     var team = "You are on team " + data.teamMembership;
     team = data.teamMembership;
-    log(message, {
-      prepend: true
-    });
-    log( team );
 
     addParticipantsMessage(data);
   });
