@@ -37,13 +37,22 @@ io.on('connection', (socket) => {
     socket.username = username;
     ++numUsers;
     addedUser = true;
+    if( numUsers % 2 === 0 ){
+      team = 1
+    } else{
+      team = 2
+    }
+    
     socket.emit('login', {
-      numUsers: numUsers
+      numUsers: numUsers,
+      teamMembership: team
     });
+
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username,
-      numUsers: numUsers
+      numUsers: numUsers,
+      teamMembership: team
     });
   });
 

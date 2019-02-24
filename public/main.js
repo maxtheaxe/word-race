@@ -11,8 +11,8 @@ $(function() {
   var $window = $(window);
   var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
+  var $completeWords = []; //words area
   var $inputMessage = $('.inputMessage'); // Input message input box
-
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
 
@@ -27,7 +27,7 @@ $(function() {
 
   const addParticipantsMessage = (data) => {
     var message = '';
-    if (data.numUsers === 1) {
+    if ( data.numUsers === 1) {
       message += "there's 1 participant";
     } else {
       message += "there are " + data.numUsers + " participants";
@@ -36,9 +36,8 @@ $(function() {
   }
 
   // Sets the client's username
-  const setUsername = () => {
+  const setUsername = (data) => {
     username = cleanInput($usernameInput.val().trim());
-
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -67,6 +66,13 @@ $(function() {
       socket.emit('new message', message);
     }
   }
+
+  // join messages
+    const joinMessages = () => {
+      var $word = $messages.join().replace(/,/g, '');
+      var $completeWords = $completeWords.push( $word );
+      log( $word );
+    }
 
   // Log a message
     const log = (message, options) => {
@@ -230,9 +236,12 @@ $(function() {
     connected = true;
     // Display the welcome message
     var message = "Welcome to Socket.IO Chat – ";
+    var team = "You are on team " + data.teamMembership;
     log(message, {
       prepend: true
     });
+    log( team );
+
     addParticipantsMessage(data);
   });
 
@@ -244,6 +253,7 @@ $(function() {
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', (data) => {
     log(data.username + ' joined');
+    log(data.teamMembership);
     addParticipantsMessage(data);
   });
 
