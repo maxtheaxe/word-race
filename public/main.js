@@ -59,8 +59,7 @@ $(function() {
       $inputMessage.val('');
       addChatMessage({
         username: username,
-        message: message,
-        teamMembership: team
+        message: message
       });
       // tell server to execute 'new message' and send along one parameter
       socket.emit('new message', message);
@@ -221,7 +220,6 @@ $(function() {
     if (event.which === 16) { // Shift key - finish word
       if (username) {
         wordDone();
-
         console.log("shift key pressed"); // verify that input is being received
 
         socket.emit('stop typing');

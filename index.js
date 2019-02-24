@@ -6,6 +6,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
 var word = []; // list of letters in current word
+var wordList = [];
 
 server.listen(port, () => {
   console.log('Server listening at port %d', port);
@@ -70,7 +71,6 @@ io.on('connection', (socket) => {
     data = word.join(''); // join all the letters in the list to one word
 
     console.log(data); // joined letters
-
     wordList.push(data); // pushes the finished word to the list of finished words
 
     word = []; // clear the list that was holding the letters
@@ -79,7 +79,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('new message', {
       username: socket.username,
       message: data
-      // teamMembership: team
     });
   });
 
